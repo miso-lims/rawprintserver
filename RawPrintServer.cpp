@@ -54,8 +54,8 @@ struct {
   int maxCommandArgs;
 } commands[] = {{"INSTALL", 2},
                 {"REMOVE", 1},
-                {"STANDALONE", 1},
-                {"BACKGROUND", 1},
+                {"STANDALONE", 2},
+                {"BACKGROUND", 2},
                 {"PRIVATE_SERVICE", 1}};
 
 #define NUM_COMMANDS (sizeof commands / sizeof *commands)
