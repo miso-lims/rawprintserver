@@ -49,8 +49,8 @@ typedef enum {
 } CommandType;
 
 /* Same order as CommandType */
-struct {
-  char *commandName;
+struct command {
+  const char *commandName;
   int maxCommandArgs;
 } commands[] = {{"INSTALL", 2},
                 {"REMOVE", 1},
@@ -60,9 +60,9 @@ struct {
 
 #define NUM_COMMANDS (sizeof commands / sizeof *commands)
 
-char serviceKey[] = "System\\CurrentControlSet\\Services\\%s";
-char standaloneKey[] = "SOFTWARE\\Alexander_Pruss\\RawPrintServer\\%s";
-char *regKey = serviceKey;
+const char* serviceKey = "System\\CurrentControlSet\\Services\\%s";
+const char* standaloneKey = "SOFTWARE\\Alexander_Pruss\\RawPrintServer\\%s";
+const char *regKey = serviceKey;
 char printerName[256] = {0};
 char strServiceName[64];
 DWORD serverPort;
@@ -73,7 +73,7 @@ void ServiceMain(int argc, char **argv);
 void ControlHandler(DWORD request);
 int InitService();
 
-int WriteToLog(char *str) {
+int WriteToLog(const char *str) {
   FILE *log;
   log = fopen(LOGFILE, "a+");
   if (log == NULL)
@@ -82,12 +82,6 @@ int WriteToLog(char *str) {
   fclose(log);
   return 0;
 }
-
-/*
-Z:\Programme\Microsoft Visual Studio\MyProjects\PrintServer\Debug>sc create
-PrintServer binPath= "Z:\Programme\Microsoft Visual
-Studio\MyProjects\PrintServer\Debug\PrintServer.exe"
-*/
 
 VOID CreatePrintServer(char *strMyPath, char *strPrinter, DWORD port,
                        int service) {
@@ -344,7 +338,6 @@ int InnerLoop(DWORD port, int service) {
       info.pOutputFile = NULL;
       info.pDatatype = "RAW";
 
-      // char *printerName = "Test;//"Brother HL-1430 series";
       if (!OpenPrinter(printerName, &printer, NULL) ||
           !StartDocPrinter(printer, 1, (LPBYTE)&info)) {
         WriteToLog("Error opening print job.");
